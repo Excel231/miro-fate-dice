@@ -1,4 +1,7 @@
-## Fate Dice
+## Fate Dice для Miro
+
+Мини-приложение для игры в Fate Core. Панель бросает четыре Fudge-кубика
+со значениями `−1`, `0` и `+1`, а затем показывает их сумму.
 
 **&nbsp;ℹ&nbsp;Note**:
 
@@ -42,9 +45,8 @@
 
 ### About the app
 
-This sample app provides you with boilerplate setup and configuration that you can further customize to build your own app.
-
-<!-- describe shortly the purpose of the sample app -->
+Click the app icon on a Miro board to open the dice roller panel. Press the
+button to roll four independent Fate/Fudge dice and calculate the total.
 
 Built using [`create-miro-app`](https://www.npmjs.com/package/create-miro-app).
 
