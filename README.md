@@ -3,6 +3,8 @@
 Мини-приложение для игры в Fate Core. Панель бросает четыре Fudge-кубика
 со значениями `−1`, `0` и `+1`, а затем показывает их сумму.
 
+**Страница проекта:** https://excel231.github.io/miro-fate-dice/
+
 **&nbsp;ℹ&nbsp;Note**:
 
 - We recommend a Chromium-based web browser for local development with HTTP. \

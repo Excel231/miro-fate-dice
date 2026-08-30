@@ -1,39 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Fate Dice — бесплатное приложение для броска четырёх Fudge-кубиков прямо на доске Miro."
+    />
     <link rel="stylesheet" href="/src/assets/style.css" />
     <script src="https://miro.com/app/static/sdk/v2/miro.js"></script>
-    <title>Fate Dice</title>
+    <title>Fate Dice — кубики Fate Core для Miro</title>
   </head>
-  <body>
-    <div id="root" aria-hidden="true">
-      <div class="grid container">
-        <div class="cs1 ce12">
-          <img src="/src/assets/welcome.png" alt="" />
-        </div>
-        <div class="cs1 ce12">
-          <p style="font-size: large">Great, your app is running locally</p>
-          <p>
-            You can now create your Developer team to get your app running in
-            Miro.
-          </p>
-        </div>
-        <div class="cs1 ce12">
-          <a
-            class="button button-primary"
-            href="https://developers.miro.com/docs/create-a-developer-team"
-            target="_blank"
-          >
-            Create a Developer team
-          </a>
-        </div>
-        <div class="cs1 ce12">
-          <p>To see your app, open it in a app panel on Miro.com, or preview it at <a href="/app.html" class="link link-primary">this url</a></p>
-        </div>
-      </div>
+  <body class="landing-body">
+    <div class="landing-shell">
+      <nav class="landing-nav" aria-label="Основная навигация">
+        <a class="brand" href="./" aria-label="Fate Dice — главная">
+          <span class="brand__mark" aria-hidden="true">±</span>
+          <span>Fate Dice</span>
+        </a>
+        <a
+          class="nav-link"
+          href="https://github.com/Excel231/miro-fate-dice"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub
+        </a>
+      </nav>
+
+      <main>
+        <section class="hero">
+          <div class="hero__copy">
+            <div class="hero__badge"><span></span> Бесплатно и с открытым кодом</div>
+            <h1>Бросайте кубики Fate прямо в Miro</h1>
+            <p class="hero__lead">
+              Четыре Fudge-кубика, мгновенный подсчёт результата и ничего
+              лишнего. Подходит для удалённых партий в Fate Core.
+            </p>
+            <div class="hero__actions">
+              <a class="landing-button landing-button--primary" href="./app.html">
+                Попробовать бросок <span aria-hidden="true">→</span>
+              </a>
+              <a
+                class="landing-button landing-button--secondary"
+                href="https://github.com/Excel231/miro-fate-dice"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Исходный код
+              </a>
+            </div>
+          </div>
+
+          <div class="hero__visual" aria-label="Пример результата броска: плюс один">
+            <div class="preview-glow"></div>
+            <div class="preview-panel">
+              <div class="preview-panel__head">
+                <div>
+                  <span>Fate Core</span>
+                  <strong>Бросок кубов</strong>
+                </div>
+                <span class="preview-status">готово</span>
+              </div>
+              <div class="preview-dice" aria-hidden="true">
+                <span class="preview-die preview-die--minus">−</span>
+                <span class="preview-die preview-die--zero">0</span>
+                <span class="preview-die preview-die--plus">+</span>
+                <span class="preview-die preview-die--plus">+</span>
+              </div>
+              <div class="preview-result">
+                <span>Итог</span>
+                <strong>+1</strong>
+              </div>
+              <div class="preview-button"><span>✦</span> Бросить ещё раз</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="features" aria-labelledby="features-title">
+          <div class="section-heading">
+            <span>Всё необходимое</span>
+            <h2 id="features-title">Сел за стол — и бросай</h2>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <span class="feature-card__icon" aria-hidden="true">4</span>
+              <h3>Четыре кубика</h3>
+              <p>Каждый кубик независимо выдаёт минус, ноль или плюс.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-card__icon" aria-hidden="true">Σ</span>
+              <h3>Мгновенный итог</h3>
+              <p>Сумма от −4 до +4 рассчитывается автоматически.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-card__icon" aria-hidden="true">↗</span>
+              <h3>Внутри Miro</h3>
+              <p>Панель открывается рядом с доской и не мешает игре.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="steps" aria-labelledby="steps-title">
+          <div class="section-heading section-heading--light">
+            <span>Как это работает</span>
+            <h2 id="steps-title">Один клик до результата</h2>
+          </div>
+          <ol class="step-list">
+            <li><span>01</span><strong>Откройте приложение</strong><p>Запустите Fate Dice на своей доске Miro.</p></li>
+            <li><span>02</span><strong>Нажмите кнопку</strong><p>Четыре кубика одновременно выберут значения.</p></li>
+            <li><span>03</span><strong>Продолжайте сцену</strong><p>Используйте готовую сумму в проверке навыка.</p></li>
+          </ol>
+        </section>
+      </main>
+
+      <footer class="landing-footer">
+        <a class="brand" href="./"><span class="brand__mark" aria-hidden="true">±</span><span>Fate Dice</span></a>
+        <p>Независимый open-source проект для поклонников Fate Core.</p>
+      </footer>
     </div>
+
     <script type="module" src="/src/index.ts"></script>
   </body>
 </html>
