@@ -4,6 +4,7 @@ import {createRoot} from 'react-dom/client';
 import './assets/style.css';
 import {
   CHARACTER_SHEET_CHANNEL,
+  CHARACTER_DEFAULT_GRADIENT,
   CHARACTER_SHEET_SIZES,
   createInitialCharacterState,
   parseCharacterSheetState,
@@ -60,6 +61,12 @@ const GRADIENT_PRESETS: GradientPreset[] = [
   {id: 'gold', start: '#fff8dc', end: '#e7ca86', angle: 155},
   {id: 'rose', start: '#f9eff5', end: '#d8b8c9', angle: 145},
   {id: 'silver', start: '#f4f5f7', end: '#c6cbd3', angle: 135},
+  {id: 'mist', start: '#eef0f3', end: '#aeb4bd', angle: 145},
+  {id: 'pearl', start: '#fafafa', end: '#d7d9dd', angle: 135},
+  {id: 'stone', start: '#e4e2df', end: '#aaa6a0', angle: 150},
+  {id: 'steel', start: '#dce1e6', end: '#89939e', angle: 140},
+  {id: 'smoke', start: '#b8bcc2', end: '#626973', angle: 145},
+  {id: 'slate', start: '#7d858e', end: '#343a42', angle: 135},
   {id: 'midnight', start: '#1d2638', end: '#46516f', angle: 145},
   {id: 'plum', start: '#241d2b', end: '#583b55', angle: 135},
   {id: 'abyss', start: '#080b13', end: '#1c2940', angle: 150},
@@ -310,7 +317,7 @@ const CharacterSheet: React.FC = () => {
   return (
     <main className={`character-sheet character-sheet--scaled character-sheet--${state.mode}${usesDarkGradient ? ' character-sheet--dark-gradient' : ''}${safePhotoUrl && !photoFailed ? ' character-sheet--has-photo' : ''}`} style={sheetStyle}>
       <header className="character-sheet__header">
-        <div><span className="character-sheet__eyebrow">{state.mode === 'core' ? copy.core : copy.accelerated}</span><input className="character-sheet__name" aria-label={copy.characterName} value={state.name} onChange={(event) => update((current) => ({...current, name: event.target.value}))} /></div>
+        <div className="character-sheet__identity"><span className="character-sheet__eyebrow">{state.mode === 'core' ? copy.core : copy.accelerated}</span><input className="character-sheet__name" aria-label={copy.characterName} value={state.name} onChange={(event) => update((current) => ({...current, name: event.target.value}))} /></div>
         {safePhotoUrl && !photoFailed && <img className="character-sheet__portrait" src={safePhotoUrl} alt="" onError={() => setPhotoFailed(true)} />}
         <div className="character-sheet__controls">
           <span className={`save-indicator save-indicator--${saveStatus}`}>{saveStatus === 'saving' ? copy.saving : saveStatus === 'saved' ? copy.saved : ''}</span>
@@ -391,18 +398,22 @@ const CharacterSheet: React.FC = () => {
             <label><span>{copy.gradientEnd}</span><input type="color" value={state.backgroundEnd} onChange={(event) => update((current) => ({...current, backgroundEnd: event.target.value}))} /></label>
             <label className="gradient-settings__angle"><span>{copy.gradientAngle}</span><input type="range" min="0" max="360" value={state.gradientAngle} onChange={(event) => update((current) => ({...current, gradientAngle: Number(event.target.value)}))} /><output>{state.gradientAngle}°</output></label>
           </div>
-          <button className="sheet-add" type="button" onClick={() => update((current) => ({...current, backgroundStart: current.mode === 'core' ? '#fff4df' : '#effbf7', backgroundEnd: current.mode === 'core' ? '#e2bfae' : '#b9ddd7', gradientAngle: 145}))}>{copy.resetGradient}</button>
-          <div className="settings-divider" />
-          <div className="character-settings__heading character-settings__heading--compact"><strong>{copy.backgroundImage}</strong></div>
-          <label className="asset-upload"><input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => { void saveAssetFile('background', event.target.files?.[0]); event.target.value = ''; }} /><span>{uploadingAsset === 'background' ? copy.uploading : copy.uploadImage}</span></label>
-          <label className="photo-url-field"><input type="url" placeholder="https://…" value={state.backgroundImageUrl.startsWith(ASSET_TOKEN_PREFIX) ? '' : state.backgroundImageUrl} onChange={(event) => { setAssetSources((current) => ({...current, background: undefined})); update((current) => ({...current, backgroundImageUrl: event.target.value})); }} /><small>{copy.backgroundUrl}</small></label>
-          {state.backgroundImageUrl && <button className="sheet-add" type="button" onClick={() => removeAsset('background')}>{copy.removeBackground}</button>}
+          <button className="sheet-add" type="button" onClick={() => update((current) => ({...current, backgroundStart: CHARACTER_DEFAULT_GRADIENT.start, backgroundEnd: CHARACTER_DEFAULT_GRADIENT.end, gradientAngle: CHARACTER_DEFAULT_GRADIENT.angle}))}>{copy.resetGradient}</button>
         </div>
-        <div className="character-settings__panel">
-          <div className="character-settings__heading"><span>{copy.portrait}</span><strong>{copy.photoUrl}</strong></div>
-          <label className="asset-upload"><input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => { void saveAssetFile('photo', event.target.files?.[0]); event.target.value = ''; }} /><span>{uploadingAsset === 'photo' ? copy.uploading : copy.uploadImage}</span></label>
-          <label className="photo-url-field"><input type="url" placeholder="https://…" value={state.photoUrl.startsWith(ASSET_TOKEN_PREFIX) ? '' : state.photoUrl} onChange={(event) => { setPhotoFailed(false); setAssetSources((current) => ({...current, photo: undefined})); update((current) => ({...current, photoUrl: event.target.value})); }} /><small>{copy.photoHint}</small></label>
-          {state.photoUrl && <button className="sheet-add" type="button" onClick={() => removeAsset('photo')}>{copy.removePhoto}</button>}
+        <div className="character-settings__panel character-settings__panel--media">
+          <div className="character-settings__media-section">
+            <div className="character-settings__heading"><span>{copy.portrait}</span><strong>{copy.photoUrl}</strong></div>
+            <label className="asset-upload"><input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => { void saveAssetFile('photo', event.target.files?.[0]); event.target.value = ''; }} /><span>{uploadingAsset === 'photo' ? copy.uploading : copy.uploadImage}</span></label>
+            <label className="photo-url-field"><input type="url" placeholder="https://…" value={state.photoUrl.startsWith(ASSET_TOKEN_PREFIX) ? '' : state.photoUrl} onChange={(event) => { setPhotoFailed(false); setAssetSources((current) => ({...current, photo: undefined})); update((current) => ({...current, photoUrl: event.target.value})); }} /><small>{copy.photoHint}</small></label>
+            {state.photoUrl && <button className="sheet-add" type="button" onClick={() => removeAsset('photo')}>{copy.removePhoto}</button>}
+          </div>
+          <div className="settings-divider" />
+          <div className="character-settings__media-section">
+            <div className="character-settings__heading"><span>{copy.backgroundImage}</span><strong>{copy.backgroundUrl}</strong></div>
+            <label className="asset-upload"><input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => { void saveAssetFile('background', event.target.files?.[0]); event.target.value = ''; }} /><span>{uploadingAsset === 'background' ? copy.uploading : copy.uploadImage}</span></label>
+            <label className="photo-url-field"><input type="url" placeholder="https://…" value={state.backgroundImageUrl.startsWith(ASSET_TOKEN_PREFIX) ? '' : state.backgroundImageUrl} onChange={(event) => { setAssetSources((current) => ({...current, background: undefined})); update((current) => ({...current, backgroundImageUrl: event.target.value})); }} /><small>{copy.backgroundUrl}</small></label>
+            {state.backgroundImageUrl && <button className="sheet-add" type="button" onClick={() => removeAsset('background')}>{copy.removeBackground}</button>}
+          </div>
           {assetError && <p className="asset-error" role="alert">{copy.uploadError}</p>}
         </div>
       </section>}

@@ -9,9 +9,10 @@ export const CHARACTER_ASSET_COLLECTION = 'fate-character-assets';
 
 export type CharacterMode = 'core' | 'accelerated';
 export type CharacterAssetKind = 'photo' | 'background';
+export const CHARACTER_DEFAULT_GRADIENT = {start: '#eef0f3', end: '#aeb4bd', angle: 145} as const;
 export const CHARACTER_SHEET_SIZES: Record<CharacterMode, {width: number; height: number}> = {
-  core: {width: 1280, height: 910},
-  accelerated: {width: 1280, height: 910},
+  core: {width: 1280, height: 1010},
+  accelerated: {width: 1280, height: 1010},
 };
 export type RatedTrait = {id: string; name: string; value: number};
 export type Consequence = {id: string; severity: 2 | 4 | 6; value: string};
@@ -77,9 +78,9 @@ export function createInitialCharacterState(mode: CharacterMode, instanceId: str
     kind: 'fate-character-sheet', version: 1, instanceId, mode, locale, theme,
     name: isRu ? 'Новый персонаж' : 'New character',
     description: '',
-    backgroundStart: mode === 'core' ? '#fff4df' : '#effbf7',
-    backgroundEnd: mode === 'core' ? '#e2bfae' : '#b9ddd7',
-    gradientAngle: 145,
+    backgroundStart: CHARACTER_DEFAULT_GRADIENT.start,
+    backgroundEnd: CHARACTER_DEFAULT_GRADIENT.end,
+    gradientAngle: CHARACTER_DEFAULT_GRADIENT.angle,
     photoUrl: '',
     backgroundImageUrl: '',
     aspects: Array.from({length: 5}, () => ''),
@@ -109,9 +110,15 @@ export function parseCharacterSheetState(value: unknown): CharacterSheetState | 
   const parsedStart = typeof candidate.backgroundStart === 'string' && /^#[0-9a-f]{6}$/i.test(candidate.backgroundStart) ? candidate.backgroundStart : fallback.backgroundStart;
   const parsedEnd = typeof candidate.backgroundEnd === 'string' && /^#[0-9a-f]{6}$/i.test(candidate.backgroundEnd) ? candidate.backgroundEnd : fallback.backgroundEnd;
   const parsedAngle = typeof candidate.gradientAngle === 'number' && Number.isFinite(candidate.gradientAngle) ? Math.max(0, Math.min(360, candidate.gradientAngle)) : fallback.gradientAngle;
-  const hasLegacyDefaultGradient = parsedStart.toLowerCase() === '#ffffff'
-    && parsedEnd.toLowerCase() === (candidate.mode === 'core' ? '#f5f1e8' : '#f2f4ed')
-    && parsedAngle === 135;
+  const hasLegacyDefaultGradient = (
+    parsedStart.toLowerCase() === '#ffffff'
+      && parsedEnd.toLowerCase() === (candidate.mode === 'core' ? '#f5f1e8' : '#f2f4ed')
+      && parsedAngle === 135
+  ) || (
+    parsedStart.toLowerCase() === (candidate.mode === 'core' ? '#fff4df' : '#effbf7')
+      && parsedEnd.toLowerCase() === (candidate.mode === 'core' ? '#e2bfae' : '#b9ddd7')
+      && parsedAngle === 145
+  );
   return {
     ...fallback,
     ...candidate,
