@@ -318,7 +318,6 @@ const CharacterSheet: React.FC = () => {
     <main className={`character-sheet character-sheet--scaled character-sheet--${state.mode}${usesDarkGradient ? ' character-sheet--dark-gradient' : ''}${safePhotoUrl && !photoFailed ? ' character-sheet--has-photo' : ''}`} style={sheetStyle}>
       <header className="character-sheet__header">
         <div className="character-sheet__identity"><span className="character-sheet__eyebrow">{state.mode === 'core' ? copy.core : copy.accelerated}</span><input className="character-sheet__name" aria-label={copy.characterName} value={state.name} onChange={(event) => update((current) => ({...current, name: event.target.value}))} /></div>
-        {safePhotoUrl && !photoFailed && <img className="character-sheet__portrait" src={safePhotoUrl} alt="" onError={() => setPhotoFailed(true)} />}
         <div className="character-sheet__controls">
           <span className={`save-indicator save-indicator--${saveStatus}`}>{saveStatus === 'saving' ? copy.saving : saveStatus === 'saved' ? copy.saved : ''}</span>
           <div className="sheet-tabs" aria-label={copy.settings}><button className={activeTab === 'sheet' ? 'is-active' : ''} type="button" onClick={() => setActiveTab('sheet')}>{copy.sheet}</button><button className={activeTab === 'settings' ? 'is-active' : ''} type="button" onClick={() => setActiveTab('settings')}>{copy.settings}</button></div>
@@ -329,6 +328,7 @@ const CharacterSheet: React.FC = () => {
 
       {activeTab === 'sheet' ? <>
       <section className="character-sheet__intro">
+        {safePhotoUrl && !photoFailed && <img className="character-sheet__portrait" src={safePhotoUrl} alt="" onError={() => setPhotoFailed(true)} />}
         <label className="character-field character-field--description"><span>{copy.description}</span><textarea rows={4} placeholder={copy.descriptionPlaceholder} value={state.description} onChange={(event) => update((current) => ({...current, description: event.target.value}))} /></label>
         <div className="character-sheet__counters"><NumericField label={copy.refresh} value={state.refresh} onChange={(value) => update((current) => ({...current, refresh: value}))} /><NumericField label={copy.fatePoints} value={state.fatePoints} onChange={(value) => update((current) => ({...current, fatePoints: value}))} /></div>
       </section>

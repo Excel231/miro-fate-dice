@@ -11,8 +11,8 @@ export type CharacterMode = 'core' | 'accelerated';
 export type CharacterAssetKind = 'photo' | 'background';
 export const CHARACTER_DEFAULT_GRADIENT = {start: '#eef0f3', end: '#aeb4bd', angle: 145} as const;
 export const CHARACTER_SHEET_SIZES: Record<CharacterMode, {width: number; height: number}> = {
-  core: {width: 1280, height: 1010},
-  accelerated: {width: 1280, height: 1010},
+  core: {width: 1280, height: 910},
+  accelerated: {width: 1280, height: 910},
 };
 export type RatedTrait = {id: string; name: string; value: number};
 export type Consequence = {id: string; severity: 2 | 4 | 6; value: string};
