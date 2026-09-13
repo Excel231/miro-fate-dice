@@ -1,9 +1,12 @@
-## Fate Dice для Miro
+## Fate Tools для Miro
 
-Мини-приложение для игры в Fate Core. Панель бросает четыре Fudge-кубика
-со значениями `−1`, `0` и `+1`, а затем показывает их сумму.
+Miro-приложение с интерактивными Fate-кубиками, редактируемыми листами персонажей и
+встроенным Watch2Gether. Листы персонажей можно добавить на доску в вариантах Fate Core
+(навыки, две шкалы стресса) и Fate Accelerated (шесть подходов, единая шкала стресса).
+Изменения полей и состояние карточек синхронизируются для участников доски. Интерфейс
+поддерживает русский и английский языки, светлую и тёмную темы.
 
-**Страница проекта:** https://excel231.github.io/miro-fate-dice/
+**Production:** https://miro-fate-dice.vercel.app/
 
 **&nbsp;ℹ&nbsp;Note**:
 
@@ -47,8 +50,12 @@
 
 ### About the app
 
-Click the app icon on a Miro board to open the dice roller panel. Press the
-button to roll four independent Fate/Fudge dice and calculate the total.
+The **Dice** tab adds an inline card with its own **Roll** button. Its result and
+last five rolls update for everyone on the board. The **Character** tab adds editable
+Fate Core or Fate Accelerated character sheets. The **Watch2Gether** tab accepts an
+existing room link and opens the official embed in the Miro side panel. The same room
+can also be added to the board as a shared inline window. New rooms are created on the
+official Watch2Gether site.
 
 Built using [`create-miro-app`](https://www.npmjs.com/package/create-miro-app).
 
