@@ -5,7 +5,7 @@ export default function handler(request, response) {
     ? request.query.instance
     : '';
   const width = 1280;
-  const height = 4757;
+  const height = 1360;
   const src = `${APP_ORIGIN}/scene.html?instance=${encodeURIComponent(instance)}`;
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Cache-Control', 'public, max-age=300');

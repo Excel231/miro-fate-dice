@@ -6,10 +6,12 @@ import {
   createInitialSceneState,
   parseSceneSheetState,
   SCENE_SHEET_CHANNEL,
+  SCENE_SHEET_SIZE,
   type SceneSheetRequest,
   type SceneSheetResponse,
   type SceneSheetState,
 } from './scene-sheet';
+import {useSheetScale} from './use-sheet-scale';
 
 const COPY = {
   ru: {
@@ -79,6 +81,7 @@ const SceneSheet: React.FC = () => {
   const saveTimer = React.useRef<number>();
   const receivedInitialState = React.useRef(false);
   const pendingLocalState = React.useRef<SceneSheetState | null>(null);
+  const sheetScale = useSheetScale(SCENE_SHEET_SIZE);
 
   React.useEffect(() => {
     if (previewMode) return () => channel.close();
@@ -153,6 +156,10 @@ const SceneSheet: React.FC = () => {
     '--sheet-accent': sheetAccent,
     '--sheet-accent-shadow': hexToRgba(sheetAccent, .28),
     '--sheet-accent-contrast': usesDarkGradient ? '#151720' : '#ffffff',
+    width: SCENE_SHEET_SIZE.width,
+    height: sheetScale.canvasHeight,
+    transform: `scale(${sheetScale.scale})`,
+    transformOrigin: 'top left',
   } as React.CSSProperties;
   if (/^https:\/\//i.test(state.backgroundImageUrl)) {
     sheetStyle.backgroundImage = `linear-gradient(rgba(10,12,18,.34), rgba(10,12,18,.34)), url(${JSON.stringify(state.backgroundImageUrl)})`;
@@ -162,7 +169,7 @@ const SceneSheet: React.FC = () => {
   const replaceAt = (items: string[], index: number, value: string) => items.map((item, itemIndex) => itemIndex === index ? value : item);
   const resizeChecks = (checks: boolean[], size: number) => Array.from({length: Math.max(1, Math.min(24, size))}, (_, index) => checks[index] ?? false);
 
-  return <main className={`character-sheet scene-sheet${usesDarkGradient ? ' character-sheet--dark-gradient' : ''}`} style={sheetStyle}>
+  return <main className={`character-sheet character-sheet--scaled scene-sheet${usesDarkGradient ? ' character-sheet--dark-gradient' : ''}`} style={sheetStyle}>
     <header className="character-sheet__header">
       <div><span className="character-sheet__eyebrow">{copy.scene}</span><input className="character-sheet__name" aria-label={copy.sceneName} value={state.name} onChange={(event) => update((current) => ({...current, name: event.target.value}))} /></div>
       <div className="character-sheet__controls">

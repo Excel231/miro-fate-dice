@@ -4,6 +4,7 @@ import {createRoot} from 'react-dom/client';
 import './assets/style.css';
 import {
   CHARACTER_SHEET_CHANNEL,
+  CHARACTER_SHEET_SIZES,
   createInitialCharacterState,
   parseCharacterSheetState,
   type CharacterAssetKind,
@@ -13,6 +14,7 @@ import {
   type CharacterSheetState,
 } from './character-sheet';
 import {DIE_LABELS, formatTotal, getTotal, rollFourDice, type DieValue} from './dice';
+import {useSheetScale} from './use-sheet-scale';
 
 const COPY = {
   ru: {
@@ -138,6 +140,9 @@ const CharacterSheet: React.FC = () => {
   const saveTimer = React.useRef<number>();
   const receivedInitialState = React.useRef(false);
   const pendingLocalState = React.useRef<CharacterSheetState | null>(null);
+  const layoutMode = state?.mode ?? previewMode ?? 'core';
+  const layoutSize = CHARACTER_SHEET_SIZES[layoutMode];
+  const sheetScale = useSheetScale(layoutSize);
 
   React.useEffect(() => {
     if (previewMode) return () => channel.close();
@@ -234,6 +239,10 @@ const CharacterSheet: React.FC = () => {
     '--sheet-accent': sheetAccent,
     '--sheet-accent-shadow': hexToRgba(sheetAccent, .28),
     '--sheet-accent-contrast': usesDarkGradient ? '#151720' : '#ffffff',
+    width: layoutSize.width,
+    height: sheetScale.canvasHeight,
+    transform: `scale(${sheetScale.scale})`,
+    transformOrigin: 'top left',
   } as React.CSSProperties;
   const resolveAssetSource = (value: string, kind: CharacterAssetKind) => value === `${ASSET_TOKEN_PREFIX}${kind}`
     ? assetSources[kind] ?? ''
@@ -299,7 +308,7 @@ const CharacterSheet: React.FC = () => {
   const rollTotal = roll ? getTotal(roll.dice) + roll.modifier : null;
 
   return (
-    <main className={`character-sheet character-sheet--${state.mode}${usesDarkGradient ? ' character-sheet--dark-gradient' : ''}${safePhotoUrl && !photoFailed ? ' character-sheet--has-photo' : ''}`} style={sheetStyle}>
+    <main className={`character-sheet character-sheet--scaled character-sheet--${state.mode}${usesDarkGradient ? ' character-sheet--dark-gradient' : ''}${safePhotoUrl && !photoFailed ? ' character-sheet--has-photo' : ''}`} style={sheetStyle}>
       <header className="character-sheet__header">
         <div><span className="character-sheet__eyebrow">{state.mode === 'core' ? copy.core : copy.accelerated}</span><input className="character-sheet__name" aria-label={copy.characterName} value={state.name} onChange={(event) => update((current) => ({...current, name: event.target.value}))} /></div>
         {safePhotoUrl && !photoFailed && <img className="character-sheet__portrait" src={safePhotoUrl} alt="" onError={() => setPhotoFailed(true)} />}
