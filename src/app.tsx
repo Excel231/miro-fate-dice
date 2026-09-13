@@ -144,7 +144,12 @@ const App: React.FC = () => {
       await miro.board.viewport.zoomTo(sheet);
       await miro.board.select({id: sheet.id});
       setMessage(sheetType === 'scene' ? copy.sceneAdded : copy.sheetAdded);
-      await miro.board.ui.closePanel();
+      const instanceId = new URL(sheet.url).searchParams.get('instance');
+      if (!instanceId) throw new Error('SHEET_INSTANCE_NOT_FOUND');
+      await miro.board.ui.openModal({
+        url: `${sheetType === 'scene' ? 'scene' : 'character'}.html?instance=${encodeURIComponent(instanceId)}`,
+        fullscreen: true,
+      });
     } catch (error) {
       console.error(error);
       setMessage(copy.addError);
