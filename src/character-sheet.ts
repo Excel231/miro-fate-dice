@@ -4,6 +4,7 @@ import type {Locale} from './board-card';
 import type {Theme} from './preferences';
 
 export const CHARACTER_SHEET_METADATA_KEY = 'fate-character-sheet-state';
+export const CHARACTER_SHEET_AUTO_SIZE_METADATA_KEY = 'fate-character-sheet-auto-sized';
 export const CHARACTER_SHEET_CHANNEL = 'fate-character-sheet-board-v1';
 export const CHARACTER_ASSET_COLLECTION = 'fate-character-assets';
 
@@ -42,6 +43,7 @@ export type CharacterSheetState = {
 
 export type CharacterSheetRequest =
   | {type: 'request-state'; instanceId: string}
+  | {type: 'report-initial-viewport'; instanceId: string; viewportWidth: number}
   | {type: 'save-state'; instanceId: string; state: CharacterSheetState}
   | {type: 'save-asset'; instanceId: string; kind: CharacterAssetKind; dataUrl: string; state: CharacterSheetState}
   | {type: 'remove-asset'; instanceId: string; kind: CharacterAssetKind; state: CharacterSheetState};
@@ -146,7 +148,7 @@ export async function createCharacterSheetEmbed(mode: CharacterMode, locale: Loc
   const instanceId = crypto.randomUUID();
   const state = createInitialCharacterState(mode, instanceId, locale, theme);
   const size = CHARACTER_SHEET_SIZES[mode];
-  const sourceUrl = `${window.location.origin}/api/character?instance=${encodeURIComponent(instanceId)}&mode=${mode}`;
+  const sourceUrl = `${window.location.origin}/api/character?instance=${encodeURIComponent(instanceId)}&mode=${mode}&autosize=1`;
   const embed = await miro.board.createEmbed({
     url: sourceUrl,
     mode: 'inline',

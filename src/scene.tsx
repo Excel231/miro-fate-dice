@@ -68,6 +68,7 @@ const hexToRgba = (hex: string, alpha: number) => {
 };
 
 const instanceId = new URLSearchParams(window.location.search).get('instance') ?? '';
+const autoSizeEnabled = new URLSearchParams(window.location.search).get('autosize') === '1';
 const previewMode = ['localhost', '127.0.0.1'].includes(window.location.hostname) && new URLSearchParams(window.location.search).get('preview') === 'scene';
 
 const SceneSheet: React.FC = () => {
@@ -78,6 +79,7 @@ const SceneSheet: React.FC = () => {
   const channel = React.useMemo(() => new BroadcastChannel(SCENE_SHEET_CHANNEL), []);
   const saveTimer = React.useRef<number>();
   const receivedInitialState = React.useRef(false);
+  const reportedInitialViewport = React.useRef(false);
   const pendingLocalState = React.useRef<SceneSheetState | null>(null);
 
   React.useEffect(() => {
@@ -120,6 +122,15 @@ const SceneSheet: React.FC = () => {
     document.documentElement.style.colorScheme = state.theme;
     document.documentElement.lang = state.locale;
   }, [state?.theme, state?.locale]);
+
+  React.useLayoutEffect(() => {
+    if (!state || previewMode || !autoSizeEnabled || reportedInitialViewport.current) return;
+    reportedInitialViewport.current = true;
+    const frame = window.requestAnimationFrame(() => {
+      channel.postMessage({type: 'report-initial-viewport', instanceId, viewportWidth: window.innerWidth} as SceneSheetRequest);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [channel, state]);
 
   const update = (recipe: (current: SceneSheetState) => SceneSheetState) => {
     setState((current) => {

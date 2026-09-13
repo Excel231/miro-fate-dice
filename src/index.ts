@@ -1,14 +1,32 @@
 import type {AppCard, Embed, ItemsUpdateEvent} from '@mirohq/websdk-types';
 
 import {FATE_DICE_TITLE_PREFIX, getFateDiceState, rollAndSyncCard} from './board-card';
-import {CHARACTER_ASSET_COLLECTION, CHARACTER_SHEET_CHANNEL, getCharacterSheetState, parseCharacterSheetState, saveCharacterSheetState, type CharacterAssetKind, type CharacterSheetRequest, type CharacterSheetResponse, type CharacterSheetState} from './character-sheet';
+import {CHARACTER_ASSET_COLLECTION, CHARACTER_SHEET_AUTO_SIZE_METADATA_KEY, CHARACTER_SHEET_CHANNEL, CHARACTER_SHEET_SIZES, getCharacterSheetState, parseCharacterSheetState, saveCharacterSheetState, type CharacterAssetKind, type CharacterSheetRequest, type CharacterSheetResponse, type CharacterSheetState} from './character-sheet';
 import {formatTotal, getTotal} from './dice';
 import {FATE_DICE_CHANNEL, getEmbedState, rollEmbedState, saveEmbedState, type EmbedRequest, type EmbedResponse} from './embed-card';
-import {getSceneSheetState, parseSceneSheetState, saveSceneSheetState, SCENE_SHEET_CHANNEL, type SceneSheetRequest, type SceneSheetResponse} from './scene-sheet';
+import {getSceneSheetState, parseSceneSheetState, saveSceneSheetState, SCENE_SHEET_AUTO_SIZE_METADATA_KEY, SCENE_SHEET_CHANNEL, SCENE_SHEET_SIZE, type SceneSheetRequest, type SceneSheetResponse} from './scene-sheet';
 
 export async function init() {
   // The same document is the public landing page outside of Miro.
   if (window.self === window.top) return;
+
+  const autoSizingEmbeds = new Set<string>();
+  const autoSizeEmbedOnce = async (embed: Embed, viewportWidth: number, targetWidth: number, metadataKey: string) => {
+    if (!Number.isFinite(viewportWidth) || viewportWidth < 200 || viewportWidth >= targetWidth || autoSizingEmbeds.has(embed.id)) return;
+    if (await embed.getMetadata(metadataKey)) return;
+    autoSizingEmbeds.add(embed.id);
+    try {
+      const scale = Math.min(4, targetWidth / viewportWidth);
+      embed.width = Math.round(embed.width * scale);
+      embed.height = Math.round(embed.height * scale);
+      await embed.sync();
+      await embed.setMetadata(metadataKey, true);
+      await miro.board.viewport.zoomTo(embed);
+      await miro.board.select({id: embed.id});
+    } finally {
+      autoSizingEmbeds.delete(embed.id);
+    }
+  };
 
   miro.board.ui.on('icon:click', async () => {
     await miro.board.ui.openPanel({url: 'app.html'});
@@ -97,11 +115,15 @@ export async function init() {
   };
   characterChannel.addEventListener('message', (event: MessageEvent<CharacterSheetRequest>) => {
     const request = event.data;
-    if (!request || !request.instanceId || !['request-state', 'save-state', 'save-asset', 'remove-asset'].includes(request.type)) return;
+    if (!request || !request.instanceId || !['request-state', 'report-initial-viewport', 'save-state', 'save-asset', 'remove-asset'].includes(request.type)) return;
     void (async () => {
       try {
         const match = await findCharacterSheet(request.instanceId);
         if (!match) throw new Error('CHARACTER_SHEET_NOT_FOUND');
+        if (request.type === 'report-initial-viewport') {
+          await autoSizeEmbedOnce(match.embed, request.viewportWidth, CHARACTER_SHEET_SIZES[match.state.mode].width, CHARACTER_SHEET_AUTO_SIZE_METADATA_KEY);
+          return;
+        }
         const requestedState = request.type === 'request-state' ? null : parseCharacterSheetState(request.state);
         if (request.type !== 'request-state' && requestedState?.instanceId !== request.instanceId) throw new Error('INVALID_CHARACTER_SHEET_STATE');
         let nextState = requestedState ?? match.state;
@@ -154,11 +176,15 @@ export async function init() {
   };
   sceneChannel.addEventListener('message', (event: MessageEvent<SceneSheetRequest>) => {
     const request = event.data;
-    if (!request || !request.instanceId || !['request-state', 'save-state'].includes(request.type)) return;
+    if (!request || !request.instanceId || !['request-state', 'report-initial-viewport', 'save-state'].includes(request.type)) return;
     void (async () => {
       try {
         const match = await findSceneSheet(request.instanceId);
         if (!match) throw new Error('SCENE_SHEET_NOT_FOUND');
+        if (request.type === 'report-initial-viewport') {
+          await autoSizeEmbedOnce(match.embed, request.viewportWidth, SCENE_SHEET_SIZE.width, SCENE_SHEET_AUTO_SIZE_METADATA_KEY);
+          return;
+        }
         const requestedState = request.type === 'save-state' ? parseSceneSheetState(request.state) : null;
         if (request.type === 'save-state' && requestedState?.instanceId !== request.instanceId) throw new Error('INVALID_SCENE_SHEET_STATE');
         const nextState = requestedState ?? match.state;

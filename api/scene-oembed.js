@@ -6,7 +6,8 @@ export default function handler(request, response) {
     : '';
   const width = 1280;
   const height = 1360;
-  const src = `${APP_ORIGIN}/scene.html?instance=${encodeURIComponent(instance)}`;
+  const autosize = request.query.autosize === '1' ? '&autosize=1' : '';
+  const src = `${APP_ORIGIN}/scene.html?instance=${encodeURIComponent(instance)}${autosize}`;
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Cache-Control', 'public, max-age=300');
   response.status(200).json({
