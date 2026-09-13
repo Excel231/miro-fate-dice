@@ -113,6 +113,7 @@ button { font: inherit; }
 /* Editable Fate character sheet embedded on a board */
 .character-body { min-width: 0; overflow: hidden; background: #f5f1e8; }
 .character-sheet { --sheet-accent: #755f58; --sheet-accent-shadow: rgba(117, 95, 88, .24); --sheet-accent-contrast: #fff; width: 100vw; height: 100vh; min-width: 0; min-height: 0; overflow: hidden; padding: 28px 32px 32px; color: #111; background: radial-gradient(circle at 100% 0, color-mix(in srgb, var(--sheet-accent) 16%, transparent), transparent 34%), linear-gradient(var(--sheet-gradient-angle, 145deg), color-mix(in srgb, var(--sheet-gradient-start, #fff4df) 78%, transparent), transparent 48%), var(--sheet-gradient-end, #e2bfae); }
+.character-sheet--scaled { min-width: 1280px; will-change: transform; }
 .character-sheet--accelerated { background: radial-gradient(circle at 100% 0, color-mix(in srgb, var(--sheet-accent) 17%, transparent), transparent 34%), linear-gradient(var(--sheet-gradient-angle, 145deg), color-mix(in srgb, var(--sheet-gradient-start, #effbf7) 78%, transparent), transparent 48%), var(--sheet-gradient-end, #b9ddd7); }
 .character-sheet--loading { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; text-align: center; }
 .character-sheet--loading p { max-width: 360px; margin: 0; color: #766f75; font-size: 13px; }
@@ -231,7 +232,7 @@ button { font: inherit; }
 [data-theme='dark'] .character-mode-picker > button { border-color: rgba(255,255,255,.1); color: #f5f1ff; background: rgba(43, 37, 51, .86); }
 [data-theme='dark'] .character-mode-picker > button.is-active { border-color: #8b69f6; background: rgba(109, 76, 212, .25); }
 
-@media (max-width: 680px) { .character-sheet { min-width: 0; height: auto; min-height: 100vh; padding: 22px; } .character-sheet__header, .character-sheet__intro { grid-template-columns: 1fr; flex-direction: column; } .character-sheet__controls { width: 100%; flex-wrap: wrap; } .save-indicator { margin-right: auto; text-align: left; } .character-sheet__columns, .character-sheet__vitals, .character-settings { grid-template-columns: 1fr; } }
+@media (max-width: 680px) { .character-sheet:not(.character-sheet--scaled) { min-width: 0; height: auto; min-height: 100vh; padding: 22px; } .character-sheet:not(.character-sheet--scaled) .character-sheet__header, .character-sheet:not(.character-sheet--scaled) .character-sheet__intro { grid-template-columns: 1fr; flex-direction: column; } .character-sheet:not(.character-sheet--scaled) .character-sheet__controls { width: 100%; flex-wrap: wrap; } .character-sheet:not(.character-sheet--scaled) .save-indicator { margin-right: auto; text-align: left; } .character-sheet:not(.character-sheet--scaled) .character-sheet__columns, .character-sheet:not(.character-sheet--scaled) .character-sheet__vitals, .character-sheet:not(.character-sheet--scaled) .character-settings { grid-template-columns: 1fr; } }
 @media (max-height: 820px) and (min-width: 681px) { .character-sheet__intro { padding-top: 7px; padding-bottom: 9px; } .character-counter { min-height: 44px; } .character-sheet__column { gap: 9px; } .sheet-section--stunts textarea { min-height: 68px; } }
 
 [data-theme='dark'] { color: #f5f1ff; background: #17141d; }
@@ -325,6 +326,7 @@ button { font: inherit; }
 
 /* Scene sheet follows the character sheet's typography, controls and visual rhythm. */
 .scene-sheet { overflow-y: auto; background: radial-gradient(circle at 100% 0, color-mix(in srgb, var(--sheet-accent) 18%, transparent), transparent 35%), linear-gradient(var(--sheet-gradient-angle, 145deg), color-mix(in srgb, var(--sheet-gradient-start, #10131d) 80%, transparent), transparent 52%), var(--sheet-gradient-end, #29334b); }
+.scene-sheet.character-sheet--scaled { overflow: hidden; }
 .scene-sheet__sigil { background: #385f5a; box-shadow: 0 10px 26px rgba(25, 62, 57, .28); }
 .scene-sheet__intro { display: grid; grid-template-columns: minmax(420px, 1.6fr) minmax(240px, .4fr); gap: 22px; align-items: stretch; padding: 15px 0 17px; }
 .scene-sheet__intro .character-field--description textarea { min-height: 142px; }
@@ -367,9 +369,9 @@ button { font: inherit; }
 .scene-sheet.character-sheet--dark-gradient .scene-progress-card__header input[type='number'] { border-color: rgba(255,255,255,.2); color: #fff; background: rgba(20,17,25,.48); }
 
 @media (max-width: 680px) {
-  .scene-sheet__intro, .scene-sheet__columns { grid-template-columns: 1fr; }
-  .scene-settings .character-settings__panel { min-height: 0; }
-  .gradient-presets__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .scene-sheet:not(.character-sheet--scaled) .scene-sheet__intro, .scene-sheet:not(.character-sheet--scaled) .scene-sheet__columns { grid-template-columns: 1fr; }
+  .scene-sheet:not(.character-sheet--scaled) .scene-settings .character-settings__panel { min-height: 0; }
+  .scene-sheet:not(.character-sheet--scaled) .gradient-presets__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @keyframes tumble { from { transform: rotate(-3deg) scale(.96); } to { transform: rotate(3deg) scale(1.02); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
