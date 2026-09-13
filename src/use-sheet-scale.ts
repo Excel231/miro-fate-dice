@@ -18,5 +18,8 @@ export const useSheetScale = ({width, height}: SheetSize) => {
     return () => window.removeEventListener('resize', updateViewport);
   }, []);
 
-  return Math.min(viewport.width / width, viewport.height / height);
+  return {
+    x: viewport.width / width,
+    y: viewport.height / height,
+  };
 };

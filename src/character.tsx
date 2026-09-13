@@ -241,7 +241,7 @@ const CharacterSheet: React.FC = () => {
     '--sheet-accent-contrast': usesDarkGradient ? '#151720' : '#ffffff',
     width: layoutSize.width,
     height: layoutSize.height,
-    transform: `scale(${sheetScale})`,
+    transform: `scale(${sheetScale.x}, ${sheetScale.y})`,
     transformOrigin: 'top left',
   } as React.CSSProperties;
   const resolveAssetSource = (value: string, kind: CharacterAssetKind) => value === `${ASSET_TOKEN_PREFIX}${kind}`

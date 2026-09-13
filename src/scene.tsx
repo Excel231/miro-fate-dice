@@ -158,7 +158,7 @@ const SceneSheet: React.FC = () => {
     '--sheet-accent-contrast': usesDarkGradient ? '#151720' : '#ffffff',
     width: SCENE_SHEET_SIZE.width,
     height: SCENE_SHEET_SIZE.height,
-    transform: `scale(${sheetScale})`,
+    transform: `scale(${sheetScale.x}, ${sheetScale.y})`,
     transformOrigin: 'top left',
   } as React.CSSProperties;
   if (/^https:\/\//i.test(state.backgroundImageUrl)) {
