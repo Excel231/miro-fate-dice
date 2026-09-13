@@ -89,7 +89,6 @@ const hexToRgba = (hex: string, alpha: number) => {
 };
 
 const instanceId = new URLSearchParams(window.location.search).get('instance') ?? '';
-const autoSizeEnabled = new URLSearchParams(window.location.search).get('autosize') === '1';
 const requestedPreview = new URLSearchParams(window.location.search).get('preview');
 const previewMode: CharacterMode | null = ['localhost', '127.0.0.1'].includes(window.location.hostname) && (requestedPreview === 'core' || requestedPreview === 'accelerated') ? requestedPreview : null;
 
@@ -138,7 +137,6 @@ const CharacterSheet: React.FC = () => {
   const channel = React.useMemo(() => new BroadcastChannel(CHARACTER_SHEET_CHANNEL), []);
   const saveTimer = React.useRef<number>();
   const receivedInitialState = React.useRef(false);
-  const reportedInitialViewport = React.useRef(false);
   const pendingLocalState = React.useRef<CharacterSheetState | null>(null);
 
   React.useEffect(() => {
@@ -189,16 +187,6 @@ const CharacterSheet: React.FC = () => {
     document.documentElement.style.colorScheme = theme;
     if (state) document.documentElement.lang = state.locale;
   }, [state?.theme, state?.locale]);
-
-  React.useLayoutEffect(() => {
-    if (!state || previewMode || !autoSizeEnabled || reportedInitialViewport.current) return;
-    reportedInitialViewport.current = true;
-    const frame = window.requestAnimationFrame(() => {
-      const contentHeight = document.querySelector('main')?.scrollHeight ?? document.documentElement.scrollHeight;
-      channel.postMessage({type: 'report-initial-viewport', instanceId, viewportWidth: window.innerWidth, contentHeight} as CharacterSheetRequest);
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [channel, state]);
 
   const update = (recipe: (current: CharacterSheetState) => CharacterSheetState) => {
     setState((current) => {

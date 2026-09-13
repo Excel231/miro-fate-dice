@@ -4,9 +4,8 @@ import type {Locale} from './board-card';
 import type {Theme} from './preferences';
 
 export const SCENE_SHEET_METADATA_KEY = 'fate-scene-sheet-state';
-export const SCENE_SHEET_AUTO_SIZE_METADATA_KEY = 'fate-scene-sheet-auto-sized';
 export const SCENE_SHEET_CHANNEL = 'fate-scene-sheet-board-v1';
-export const SCENE_SHEET_SIZE = {width: 1280, height: 1360};
+export const SCENE_SHEET_SIZE = {width: 1280, height: 4757};
 
 export type SceneZone = {id: string; name: string; aspects: string[]};
 export type SceneProgress = {id: string; name: string; checks: boolean[]};
@@ -32,7 +31,6 @@ export type SceneSheetState = {
 
 export type SceneSheetRequest =
   | {type: 'request-state'; instanceId: string}
-  | {type: 'report-initial-viewport'; instanceId: string; viewportWidth: number; contentHeight: number}
   | {type: 'save-state'; instanceId: string; state: SceneSheetState};
 
 export type SceneSheetResponse = {
@@ -132,7 +130,7 @@ export async function createSceneSheetEmbed(locale: Locale, theme: Theme): Promi
   const viewport = await miro.board.viewport.get();
   const instanceId = crypto.randomUUID();
   const state = createInitialSceneState(instanceId, locale, theme);
-  const sourceUrl = `${window.location.origin}/api/scene?instance=${encodeURIComponent(instanceId)}&autosize=1`;
+  const sourceUrl = `${window.location.origin}/api/scene?instance=${encodeURIComponent(instanceId)}`;
   const embed = await miro.board.createEmbed({
     url: sourceUrl,
     mode: 'inline',

@@ -4,15 +4,14 @@ import type {Locale} from './board-card';
 import type {Theme} from './preferences';
 
 export const CHARACTER_SHEET_METADATA_KEY = 'fate-character-sheet-state';
-export const CHARACTER_SHEET_AUTO_SIZE_METADATA_KEY = 'fate-character-sheet-auto-sized';
 export const CHARACTER_SHEET_CHANNEL = 'fate-character-sheet-board-v1';
 export const CHARACTER_ASSET_COLLECTION = 'fate-character-assets';
 
 export type CharacterMode = 'core' | 'accelerated';
 export type CharacterAssetKind = 'photo' | 'background';
 export const CHARACTER_SHEET_SIZES: Record<CharacterMode, {width: number; height: number}> = {
-  core: {width: 1280, height: 910},
-  accelerated: {width: 1280, height: 830},
+  core: {width: 1280, height: 4964},
+  accelerated: {width: 1280, height: 1310},
 };
 export type RatedTrait = {id: string; name: string; value: number};
 export type Consequence = {id: string; severity: 2 | 4 | 6; value: string};
@@ -43,7 +42,6 @@ export type CharacterSheetState = {
 
 export type CharacterSheetRequest =
   | {type: 'request-state'; instanceId: string}
-  | {type: 'report-initial-viewport'; instanceId: string; viewportWidth: number; contentHeight: number}
   | {type: 'save-state'; instanceId: string; state: CharacterSheetState}
   | {type: 'save-asset'; instanceId: string; kind: CharacterAssetKind; dataUrl: string; state: CharacterSheetState}
   | {type: 'remove-asset'; instanceId: string; kind: CharacterAssetKind; state: CharacterSheetState};
@@ -148,7 +146,7 @@ export async function createCharacterSheetEmbed(mode: CharacterMode, locale: Loc
   const instanceId = crypto.randomUUID();
   const state = createInitialCharacterState(mode, instanceId, locale, theme);
   const size = CHARACTER_SHEET_SIZES[mode];
-  const sourceUrl = `${window.location.origin}/api/character?instance=${encodeURIComponent(instanceId)}&mode=${mode}&autosize=1`;
+  const sourceUrl = `${window.location.origin}/api/character?instance=${encodeURIComponent(instanceId)}&mode=${mode}`;
   const embed = await miro.board.createEmbed({
     url: sourceUrl,
     mode: 'inline',
