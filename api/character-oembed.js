@@ -5,7 +5,7 @@ export default function handler(request, response) {
     ? request.query.instance
     : '';
   const mode = request.query.mode === 'accelerated' ? 'accelerated' : 'core';
-  const size = mode === 'core' ? {width: 1280, height: 910} : {width: 1280, height: 830};
+  const size = {width: 1280, height: 910};
   const src = `${APP_ORIGIN}/character.html?instance=${encodeURIComponent(instance)}`;
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Cache-Control', 'public, max-age=300');
