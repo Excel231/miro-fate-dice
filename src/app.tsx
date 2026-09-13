@@ -144,6 +144,7 @@ const App: React.FC = () => {
       await miro.board.viewport.zoomTo(sheet);
       await miro.board.select({id: sheet.id});
       setMessage(sheetType === 'scene' ? copy.sceneAdded : copy.sheetAdded);
+      await miro.board.ui.closePanel();
     } catch (error) {
       console.error(error);
       setMessage(copy.addError);
