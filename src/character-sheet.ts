@@ -153,6 +153,7 @@ export async function createCharacterSheetEmbed(mode: CharacterMode, locale: Loc
     x: viewport.x + viewport.width / 2,
     y: viewport.y + viewport.height / 2,
     width: size.width,
+    height: size.height,
   });
   await saveCharacterSheetState(embed, state);
   return embed;

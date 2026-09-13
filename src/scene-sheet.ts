@@ -5,7 +5,7 @@ import type {Theme} from './preferences';
 
 export const SCENE_SHEET_METADATA_KEY = 'fate-scene-sheet-state';
 export const SCENE_SHEET_CHANNEL = 'fate-scene-sheet-board-v1';
-export const SCENE_SHEET_SIZE = {width: 1280, height: 1220};
+export const SCENE_SHEET_SIZE = {width: 1280, height: 820};
 
 export type SceneZone = {id: string; name: string; aspects: string[]};
 export type SceneProgress = {id: string; name: string; checks: boolean[]};
@@ -137,6 +137,7 @@ export async function createSceneSheetEmbed(locale: Locale, theme: Theme): Promi
     x: viewport.x + viewport.width / 2,
     y: viewport.y + viewport.height / 2,
     width: SCENE_SHEET_SIZE.width,
+    height: SCENE_SHEET_SIZE.height,
   });
   await saveSceneSheetState(embed, state);
   return embed;
