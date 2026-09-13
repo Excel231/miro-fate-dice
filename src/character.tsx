@@ -194,7 +194,8 @@ const CharacterSheet: React.FC = () => {
     if (!state || previewMode || !autoSizeEnabled || reportedInitialViewport.current) return;
     reportedInitialViewport.current = true;
     const frame = window.requestAnimationFrame(() => {
-      channel.postMessage({type: 'report-initial-viewport', instanceId, viewportWidth: window.innerWidth} as CharacterSheetRequest);
+      const contentHeight = document.querySelector('main')?.scrollHeight ?? document.documentElement.scrollHeight;
+      channel.postMessage({type: 'report-initial-viewport', instanceId, viewportWidth: window.innerWidth, contentHeight} as CharacterSheetRequest);
     });
     return () => window.cancelAnimationFrame(frame);
   }, [channel, state]);

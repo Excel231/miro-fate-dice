@@ -43,7 +43,7 @@ export type CharacterSheetState = {
 
 export type CharacterSheetRequest =
   | {type: 'request-state'; instanceId: string}
-  | {type: 'report-initial-viewport'; instanceId: string; viewportWidth: number}
+  | {type: 'report-initial-viewport'; instanceId: string; viewportWidth: number; contentHeight: number}
   | {type: 'save-state'; instanceId: string; state: CharacterSheetState}
   | {type: 'save-asset'; instanceId: string; kind: CharacterAssetKind; dataUrl: string; state: CharacterSheetState}
   | {type: 'remove-asset'; instanceId: string; kind: CharacterAssetKind; state: CharacterSheetState};
