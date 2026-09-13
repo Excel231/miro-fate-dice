@@ -141,7 +141,6 @@ const App: React.FC = () => {
       const sheet = sheetType === 'scene'
         ? await createSceneSheetEmbed(locale, theme)
         : await createCharacterSheetEmbed(sheetType, locale, theme);
-      await miro.board.viewport.zoomTo(sheet);
       await miro.board.select({id: sheet.id});
       setMessage(sheetType === 'scene' ? copy.sceneAdded : copy.sheetAdded);
       await miro.board.ui.closePanel();

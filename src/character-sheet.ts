@@ -10,8 +10,8 @@ export const CHARACTER_ASSET_COLLECTION = 'fate-character-assets';
 export type CharacterMode = 'core' | 'accelerated';
 export type CharacterAssetKind = 'photo' | 'background';
 export const CHARACTER_SHEET_SIZES: Record<CharacterMode, {width: number; height: number}> = {
-  core: {width: 1280, height: 6200},
-  accelerated: {width: 1280, height: 5300},
+  core: {width: 1280, height: 910},
+  accelerated: {width: 1280, height: 830},
 };
 export type RatedTrait = {id: string; name: string; value: number};
 export type Consequence = {id: string; severity: 2 | 4 | 6; value: string};

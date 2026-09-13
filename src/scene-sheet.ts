@@ -5,7 +5,7 @@ import type {Theme} from './preferences';
 
 export const SCENE_SHEET_METADATA_KEY = 'fate-scene-sheet-state';
 export const SCENE_SHEET_CHANNEL = 'fate-scene-sheet-board-v1';
-export const SCENE_SHEET_SIZE = {width: 1280, height: 5700};
+export const SCENE_SHEET_SIZE = {width: 1280, height: 1360};
 
 export type SceneZone = {id: string; name: string; aspects: string[]};
 export type SceneProgress = {id: string; name: string; checks: boolean[]};
