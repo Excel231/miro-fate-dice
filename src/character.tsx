@@ -356,6 +356,12 @@ const CharacterSheet: React.FC = () => {
         </div>
 
         <div className="character-sheet__column">
+          <section className="sheet-section sheet-section--stunts">
+            <h2>{copy.stunts}</h2>
+            <div className="sheet-stack">{state.stunts.map((stunt, index) => <span className="removable-field removable-field--textarea" key={index}><textarea rows={2} placeholder={copy.stuntPlaceholder} value={stunt} onChange={(event) => update((current) => ({...current, stunts: replaceAt(current.stunts, index, event.target.value)}))} />{state.stunts.length > 1 && <button type="button" aria-label={copy.remove} title={copy.remove} onClick={() => update((current) => ({...current, stunts: current.stunts.filter((_, itemIndex) => itemIndex !== index)}))}>×</button>}</span>)}</div>
+            {state.stunts.length < 8 && <button className="sheet-add" type="button" onClick={() => update((current) => ({...current, stunts: [...current.stunts, '']}))}>+ {copy.addStunt}</button>}
+          </section>
+
           <div className="character-sheet__vitals">
             <section className="sheet-section">
               <h2>{copy.stress}</h2>
@@ -368,12 +374,6 @@ const CharacterSheet: React.FC = () => {
               <div className="sheet-stack">{state.consequences.map((consequence) => <label className="character-field" key={consequence.id}><span>{consequenceLabels[consequence.severity]} ({consequence.severity})</span><input value={consequence.value} onChange={(event) => update((current) => ({...current, consequences: current.consequences.map((item) => item.id === consequence.id ? {...item, value: event.target.value} : item)}))} /></label>)}</div>
             </section>
           </div>
-
-          <section className="sheet-section sheet-section--stunts">
-            <h2>{copy.stunts}</h2>
-            <div className="sheet-stack">{state.stunts.map((stunt, index) => <span className="removable-field removable-field--textarea" key={index}><textarea rows={2} placeholder={copy.stuntPlaceholder} value={stunt} onChange={(event) => update((current) => ({...current, stunts: replaceAt(current.stunts, index, event.target.value)}))} />{state.stunts.length > 1 && <button type="button" aria-label={copy.remove} title={copy.remove} onClick={() => update((current) => ({...current, stunts: current.stunts.filter((_, itemIndex) => itemIndex !== index)}))}>×</button>}</span>)}</div>
-            {state.stunts.length < 8 && <button className="sheet-add" type="button" onClick={() => update((current) => ({...current, stunts: [...current.stunts, '']}))}>+ {copy.addStunt}</button>}
-          </section>
         </div>
       </div>
       </> : <section className="character-settings">
