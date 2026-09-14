@@ -346,8 +346,11 @@ const CharacterSheet: React.FC = () => {
             <div className={`trait-grid trait-grid--${state.mode}`}>{state.traits.map((trait) => <div className="trait" key={trait.id}><input className="trait__value" type="number" min="-2" max="8" value={trait.value} aria-label={`${trait.name} value`} onChange={(event) => update((current) => ({...current, traits: current.traits.map((item) => item.id === trait.id ? {...item, value: Math.max(-2, Math.min(8, Number(event.target.value) || 0))} : item)}))} /><input className="trait__name" value={trait.name} placeholder={copy.skillPlaceholder} onChange={(event) => update((current) => ({...current, traits: current.traits.map((item) => item.id === trait.id ? {...item, name: event.target.value} : item)}))} /><button className="trait__roll" type="button" title={copy.roll} aria-label={`${copy.roll}: ${trait.name || copy.skillPlaceholder}`} onClick={() => rollTrait(trait)}>✦</button></div>)}</div>
             <div className="character-roller character-roller--under-traits" aria-live="polite">
               <div className="character-roller__meta"><span>{copy.rollResult}</span><strong>{roll?.label ?? copy.rollPrompt}</strong></div>
-              <div className="character-roller__dice" aria-label={copy.rollResult}>{(roll?.dice ?? [0, 0, 0, 0]).map((die, index) => <span className={`character-roll-die character-roll-die--${die === 1 ? 'plus' : die === -1 ? 'minus' : 'zero'}`} key={index}>{DIE_LABELS[die]}</span>)}</div>
-              <strong className="character-roller__total">{rollTotal === null ? '—' : formatTotal(rollTotal)}</strong>
+              <div className="character-roller__dice" aria-label={copy.rollResult}>
+                {(roll?.dice ?? [0, 0, 0, 0]).map((die, index) => <span className={`character-roll-die character-roll-die--${die === 1 ? 'plus' : die === -1 ? 'minus' : 'zero'}`} key={index}>{DIE_LABELS[die]}</span>)}
+                {roll && <strong className="character-roller__modifier">{`${roll.modifier < 0 ? '−' : '+'} ${Math.abs(roll.modifier)} =`}</strong>}
+                <strong className="character-roller__total">{rollTotal === null ? '—' : formatTotal(rollTotal)}</strong>
+              </div>
             </div>
           </section>
         </div>
